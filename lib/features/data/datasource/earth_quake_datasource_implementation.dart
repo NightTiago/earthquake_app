@@ -4,7 +4,6 @@ import 'package:earthquake_app/core/utils/date_input_converter.dart';
 import 'package:earthquake_app/features/data/datasource/earth_quake_datasource.dart';
 import 'package:earthquake_app/features/data/datasource/endpoints/earth_quake_endpoint.dart';
 import 'package:earthquake_app/features/data/models/earth_quake_model.dart';
-import 'package:earthquake_app/features/data/repositories/earth_quake_repository_implementation.dart';
 import 'package:earthquake_app/features/domain/entities/earth_quake_entity.dart';
 
 class EarthQuakeDatasourceImplementation implements IEarthQuakeDatasource {
