@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:earthquake_app/core/usecase/errors/exceptions.dart';
 import 'package:earthquake_app/core/utils/date_input_converter.dart';
@@ -18,7 +20,7 @@ class EarthQuakeDatasourceImplementation implements IEarthQuakeDatasource {
     final response =
         await client.get(EarthQuakeEndPoint.getQueryMinMagnitude(minMagnitude));
     if (response.statusCode == 200) {
-      return EarthQuakeModel.fromJson(response.data);
+      return EarthQuakeModel.fromJson(json.decode(response.data));
     } else {
       throw ServerException();
     }
@@ -34,7 +36,7 @@ class EarthQuakeDatasourceImplementation implements IEarthQuakeDatasource {
         EarthQuakeEndPoint.getQueryStartAndEndTime(
             dateConvertedStartTime, dateConvertedEndTime));
     if (response.statusCode == 200) {
-      return EarthQuakeModel.fromJson(response.data);
+      return EarthQuakeModel.fromJson(json.decode(response.data));
     } else {
       throw ServerException();
     }
@@ -47,7 +49,7 @@ class EarthQuakeDatasourceImplementation implements IEarthQuakeDatasource {
     final response = await client
         .get(EarthQuakeEndPoint.getQueryStartTime(dateConvertedStartTime));
     if (response.statusCode == 200) {
-      return EarthQuakeModel.fromJson(response.data);
+      return EarthQuakeModel.fromJson(json.decode(response.data));
     } else {
       throw ServerException();
     }
@@ -57,7 +59,7 @@ class EarthQuakeDatasourceImplementation implements IEarthQuakeDatasource {
   Future<EarthQuakeEntity> getResume() async {
     final response = await client.get(EarthQuakeEndPoint.getResume());
     if (response.statusCode == 200) {
-      return EarthQuakeModel.fromJson(response.data);
+      return EarthQuakeModel.fromJson(json.decode(response.data));
     } else {
       throw ServerException();
     }

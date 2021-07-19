@@ -12,7 +12,8 @@ class EarthQuakeModel extends EarthQuakeEntity {
           type: json['type'],
           metadata: MetadataModel.fromJson(json['metadata']),
           features: json['features']
-              .map<FeaturesModel>((map) => FeaturesModel.fromJson(map)),
+              .map<FeaturesModel>((map) => FeaturesModel.fromJson(map))
+              .toList(),
           bbox: json['bbox'].cast<double>());
 
   Map<String, dynamic> toJson() =>

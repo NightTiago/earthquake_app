@@ -1,11 +1,11 @@
 import 'package:earthquake_app/features/domain/entities/geometry_entity.dart';
 
 class GeometryModel extends GeometryEntity {
-  GeometryModel({required type, required coordinates})
+  GeometryModel({required String type, required List<double> coordinates})
       : super(type: type, coordinates: coordinates);
 
-  factory GeometryModel.fromJson(Map<String, dynamic> json) =>
-      GeometryModel(type: json['type'], coordinates: json['coordinates']);
+  factory GeometryModel.fromJson(Map<String, dynamic> json) => GeometryModel(
+      type: json['type'], coordinates: json['coordinates'].cast<double>());
 
   Map<String, dynamic> toJson() => {'type': type, 'coordinates': coordinates};
 }
