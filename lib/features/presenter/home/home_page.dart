@@ -1,78 +1,110 @@
+import 'package:earthquake_app/core/app_colors.dart';
+import 'package:earthquake_app/core/app_gradients.dart';
+import 'package:earthquake_app/core/core.dart';
+import 'package:earthquake_app/features/presenter/home/widgets/app_bar_widget.dart';
+import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.title}) : super(key: key);
-  // always marked "final".
+  HomePage({Key? key}) : super(key: key);
 
-  final String title;
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  // BottomBarController controller = BottomBarController(vsync: );
+
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the HomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+
+        appBar: AppBarWidget(),
+        body: Container(
+          child: GoogleMap(
+            initialCameraPosition: CameraPosition(
+                target: LatLng(16263612, 162636),
+                zoom: 90.0
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            mapType: MapType.satellite,
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: GestureDetector(
+          onVerticalDragUpdate: DefaultBottomBarController.of(context).onDrag,
+          onVerticalDragEnd: DefaultBottomBarController.of(context).onDragEnd,
+          child: FloatingActionButton(
+            elevation: 2,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 3),
+              height: 70,
+              width: 70,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: AppGradients.linear),
+              child: AnimatedBuilder(
+                animation: DefaultBottomBarController.of(context).state,
+                builder: (context, child) => Center(
+                    child: Image.asset(AppImages.eath, height: MediaQuery.of(context).size.height * 0.04),
+                ),
+              ),
             ),
-          ],
+            onPressed: () => DefaultBottomBarController.of(context).swap(),
+          ),
+        ),
+        bottomSheet: Container(
+          padding: EdgeInsets.only(top: 10),
+          child: BottomExpandableAppBar(
+            expandedHeight: MediaQuery.of(context).size.height * 0.7,
+            horizontalMargin: 10,
+            shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
+            expandedBackColor: AppColors.background,
+            expandedBody: Container(
+              height: double.infinity,
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              child: Column(
+                children: [
+                    Container(
+                      padding: EdgeInsets.only(top: 10),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Text("EQ Magnitude 2.5+", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)
+                    )
+                ],
+              ),
+            ),
+            bottomAppBarBody: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      "Sei lá",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Spacer(
+                    flex: 2,
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Perfil",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
