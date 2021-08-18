@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:earthquake_app/core/utils/HexColor.dart';
 import 'package:flutter/material.dart';

@@ -1,38 +1,53 @@
 import 'package:earthquake_app/core/app_colors.dart';
 import 'package:earthquake_app/core/app_gradients.dart';
 import 'package:earthquake_app/core/core.dart';
+import 'package:earthquake_app/features/presenter/home/controller/home_controller.dart';
 import 'package:earthquake_app/features/presenter/home/widgets/app_bar_widget.dart';
+import 'package:earthquake_app/features/presenter/home/widgets/card_earth_quakes_widget.dart';
+import 'package:earthquake_app/features/presenter/home/widgets/drop_down_widget.dart';
 import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
-
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  late HomeController homeController;
 
-  // BottomBarController controller = BottomBarController(vsync: );
+  Set<Marker> markers = new Set<Marker>();
+  Set<Circle> circles = new Set<Circle>();
 
+  @override
+  void initState() {
+    homeController = HomeController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    //Mock para teste
+    List<String> exemplo = ['Magnitude', 'Segundo', 'Terceiro'];
+
+    homeController.addCircles(2.7976067155037168, -60.7211947550041, circles);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-
         appBar: AppBarWidget(),
         body: Container(
+          height: MediaQuery.of(context).size.height * 0.76,
           child: GoogleMap(
+            markers: markers,
+            circles: circles,
+            compassEnabled: false,
+            zoomControlsEnabled: false,
+            mapType: MapType.hybrid,
             initialCameraPosition: CameraPosition(
-                target: LatLng(16263612, 162636),
-                zoom: 90.0
-            ),
-            mapType: MapType.satellite,
+                target: LatLng(2.7976067155037168, -60.7211947550041),
+                zoom: 90.0),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -46,12 +61,12 @@ class _HomePageState extends State<HomePage> {
               height: 70,
               width: 70,
               decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: AppGradients.linear),
+                  shape: BoxShape.circle, gradient: AppGradients.linear),
               child: AnimatedBuilder(
                 animation: DefaultBottomBarController.of(context).state,
                 builder: (context, child) => Center(
-                    child: Image.asset(AppImages.eath, height: MediaQuery.of(context).size.height * 0.04),
+                  child: Image.asset(AppImages.eath,
+                      height: MediaQuery.of(context).size.height * 0.04),
                 ),
               ),
             ),
@@ -63,20 +78,49 @@ class _HomePageState extends State<HomePage> {
           child: BottomExpandableAppBar(
             expandedHeight: MediaQuery.of(context).size.height * 0.7,
             horizontalMargin: 10,
-            shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
+            shape: AutomaticNotchedShape(
+                RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
             expandedBackColor: AppColors.background,
             expandedBody: Container(
               height: double.infinity,
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              child: Column(
-                children: [
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
                     Container(
-                      padding: EdgeInsets.only(top: 10),
+                        padding: EdgeInsets.only(top: 10),
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Text("EQ Magnitude 2.5+",
+                            style: AppTextStyles.heading)),
+                    Container(
                       width: MediaQuery.of(context).size.width * 0.8,
-                      child: Text("EQ Magnitude 2.5+", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)
-                    )
-                ],
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                                child: DropDownWidget(
+                                    dropDownValue: "Magnitude",
+                                    listItens: exemplo)),
+                            Container(width: 5),
+                            Expanded(
+                                child: DropDownWidget(
+                                    dropDownValue: "Magnitude",
+                                    listItens: exemplo)),
+                          ]),
+                    ),
+                    Container(
+                        height: MediaQuery.of(context).size.height * 0.63,
+                        child: ListView.builder(
+                            itemCount: 50,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CardEarthQuakeWidget(),
+                              );
+                            }))
+                  ],
+                ),
               ),
             ),
             bottomAppBarBody: Padding(
